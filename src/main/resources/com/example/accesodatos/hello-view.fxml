@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="btnLimpiar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.accesodatos.HelloController">
+    <Label layoutX="52.0" layoutY="54.0" text="GESTIÓN DE DEPARTAMENTOS" />
+    <Label layoutX="49.0" layoutY="98.0" text="Nº de departamento:" />
+    <Label layoutX="52.0" layoutY="129.0" text="Nombre:" />
+    <Label layoutX="52.0" layoutY="161.0" text="Localidad:" />
+    <TextField layoutX="174.0" layoutY="94.0" prefHeight="25.0" prefWidth="113.0" />
+    <TextField layoutX="136.0" layoutY="125.0" prefHeight="25.0" prefWidth="152.0" />
+    <TextField layoutX="136.0" layoutY="166.0" prefHeight="25.0" prefWidth="152.0" />
+    <Button layoutX="300.0" layoutY="94.0" mnemonicParsing="false" onAction="#btnBuscarClick" text="Buscar" />
+    <Button fx:id="btnAlta" layoutX="105.0" layoutY="233.0" mnemonicParsing="false" onAction="#btnAltaClick" prefWidth="100.0" text="Alta" />
+    <Button fx:id="btnBaja" layoutX="205.0" layoutY="233.0" mnemonicParsing="false" onAction="#btnBajaClick" prefWidth="100.0" text="Baja" />
+    <Button fx:id="btnModificacion" layoutX="305.0" layoutY="233.0" mnemonicParsing="false" onAction="#btnModificacionClick" prefWidth="100.0" text="Modificación" />
+    <Button layoutX="405.0" layoutY="233.0" mnemonicParsing="false" onAction="#btnLimpiarClick" prefWidth="100.0" text="Limpiar" />
+</AnchorPane>
