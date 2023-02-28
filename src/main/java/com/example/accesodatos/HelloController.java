@@ -2,6 +2,8 @@ package com.example.accesodatos;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.xmldb.api.DatabaseManager;
@@ -13,7 +15,6 @@ public class HelloController {
 
     public TextField txtNumDep;
     public TextField txtNombre;
-    public TextField txtDep;
     public TextField txtLocalidad;
     Collection col;
     @FXML
@@ -38,22 +39,48 @@ public class HelloController {
             String usuPwd = "pw";
             col = DatabaseManager.getCollection(URI, usu, usuPwd);
             System.out.println(col.getName());
-//            XPathQueryService service = (XPathQueryService) col.getServices()
         } catch (ClassNotFoundException | XMLDBException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void btnAltaClick(ActionEvent actionEvent) {
+        XPathQueryService service;
+        try {
+            service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+            String query = "update insert <DEP_ROW> <DEPT_NO>" + txtNumDep.getText() + "</DEPT_NO> <DNOMBRE>" + txtNombre.getText() + "</DNOMBRE> <LOC>" + txtLocalidad.getText() + "</LOC></DEP_ROW> into /departamentos";
+            ResourceSet result = service.query(query);
+            if (result != null) {
+                Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Departamento Insertado", ButtonType.OK);
+                a.showAndWait();
+            }
+        } catch (XMLDBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void btnBajaClick(ActionEvent actionEvent) {
+        XPathQueryService service;
+        try {
+            service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+            String query = "update delete /departamentos/DEP_ROW[DEPT_NO = " + txtNumDep.getText() + "]";
+            ResourceSet result = service.query(query);
+            if (result != null) {
+                Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Departamento Insertado", ButtonType.OK);
+                a.showAndWait();
+            }
+        } catch (XMLDBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void btnModificacionClick(ActionEvent actionEvent) {
     }
 
     public void btnLimpiarClick(ActionEvent actionEvent) {
+        txtLocalidad.clear();
+        txtNombre.clear();
+        txtNumDep.clear();
     }
 
     public void btnBuscarClick(ActionEvent actionEvent) {
