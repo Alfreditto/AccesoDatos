@@ -75,6 +75,19 @@ public class HelloController {
     }
 
     public void btnModificacionClick(ActionEvent actionEvent) {
+        XPathQueryService service;
+        try {
+            service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+            String query = "update replace /departamentos/DEP_ROW[DEPT_NO = " + txtNumDep.getText() + "] with "
+                    + "<DEP_ROW> <DEPT_NO>" + txtNumDep.getText() + "</DEPT_NO> <DNOMBRE>" + txtNombre.getText() + "</DNOMBRE> <LOC>" + txtLocalidad.getText() + "</LOC></DEP_ROW>";
+            ResourceSet result = service.query(query);
+            if (result != null) {
+                Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Departamento Insertado", ButtonType.OK);
+                a.showAndWait();
+            }
+        } catch (XMLDBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void btnLimpiarClick(ActionEvent actionEvent) {
