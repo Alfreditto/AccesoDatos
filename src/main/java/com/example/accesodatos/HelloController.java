@@ -33,7 +33,7 @@ public class HelloController {
 
             String URI = "xmldb:exist://localhost:8080/exist/xmlrpc/db/Pruebas";
             String usu = "admin";
-            String usuPwd = "pw";
+            String usuPwd = "";
             col = DatabaseManager.getCollection(URI, usu, usuPwd);
             System.out.println(col.getName());
         } catch (ClassNotFoundException | XMLDBException | InstantiationException | IllegalAccessException e) {
@@ -136,43 +136,48 @@ public class HelloController {
     }
 
     public void btnBuscarClick(ActionEvent actionEvent) {
-        XPathQueryService service;
-        try {
-            service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
-            String query = "/departamentos/DEP_ROW[DEPT_NO=" + txtNumDep.getText() + "]/DNOMBRE/text()";
-            String query2 = "/departamentos/DEP_ROW[DEPT_NO=" + txtNumDep.getText() + "]/LOC/text()";
-            String query3 = "/departamentos/DEP_ROW[DEPT_NO=" + txtNumDep.getText() + "]";
-            ResourceSet resultNombre = service.query(query);
-            ResourceSet resultLoc = service.query(query2);
-            ResourceSet resultEntero = service.query(query3);
-            System.out.println(resultNombre.getSize());
-            System.out.println(resultLoc.getSize());
-            System.out.println(resultEntero.getSize());
-            ResourceIterator i = resultNombre.getIterator();
-            ResourceIterator j = resultLoc.getIterator();
-            ResourceIterator k = resultEntero.getIterator();
-            if (!i.hasMoreResources() && !j.hasMoreResources() && !k.hasMoreResources()) {
-                System.out.println("Consulta nulla");
-                Alert alerta = new Alert(Alert.AlertType.ERROR, "El departamento no existe", ButtonType.OK);
-                alerta.showAndWait();
-            } else {
-                while (i.hasMoreResources() && j.hasMoreResources()) {
-                    Resource r = i.nextResource();
-                    Resource rs = j.nextResource();
-                    Resource rt = k.nextResource();
-                    txtNombre.setText((String) r.getContent());
-                    txtLocalidad.setText((String) rs.getContent());
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Información");
-                    alert.setHeaderText("Información del departamento");
-                    alert.getDialogPane().setContent(new TextArea((String) rt.getContent()));
-                    alert.showAndWait();
-                    System.out.println((String) r.getContent());
-                    System.out.println((String) rs.getContent());
+        if (txtNumDep.getText().isBlank()) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "El campo numero de departamento no puede estar vacio", ButtonType.OK);
+            a.showAndWait();
+        } else {
+            XPathQueryService service;
+            try {
+                service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+                String query = "/departamentos/DEP_ROW[DEPT_NO=" + txtNumDep.getText() + "]/DNOMBRE/text()";
+                String query2 = "/departamentos/DEP_ROW[DEPT_NO=" + txtNumDep.getText() + "]/LOC/text()";
+                String query3 = "/departamentos/DEP_ROW[DEPT_NO=" + txtNumDep.getText() + "]";
+                ResourceSet resultNombre = service.query(query);
+                ResourceSet resultLoc = service.query(query2);
+                ResourceSet resultEntero = service.query(query3);
+                System.out.println(resultNombre.getSize());
+                System.out.println(resultLoc.getSize());
+                System.out.println(resultEntero.getSize());
+                ResourceIterator i = resultNombre.getIterator();
+                ResourceIterator j = resultLoc.getIterator();
+                ResourceIterator k = resultEntero.getIterator();
+                if (!i.hasMoreResources() && !j.hasMoreResources() && !k.hasMoreResources()) {
+                    System.out.println("Consulta nulla");
+                    Alert alerta = new Alert(Alert.AlertType.ERROR, "El departamento no existe", ButtonType.OK);
+                    alerta.showAndWait();
+                } else {
+                    while (i.hasMoreResources() && j.hasMoreResources()) {
+                        Resource r = i.nextResource();
+                        Resource rs = j.nextResource();
+                        Resource rt = k.nextResource();
+                        txtNombre.setText((String) r.getContent());
+                        txtLocalidad.setText((String) rs.getContent());
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Información");
+                        alert.setHeaderText("Información del departamento");
+                        alert.getDialogPane().setContent(new TextArea((String) rt.getContent()));
+                        alert.showAndWait();
+                        System.out.println((String) r.getContent());
+                        System.out.println((String) rs.getContent());
+                    }
                 }
+            } catch (XMLDBException e) {
+                throw new RuntimeException(e);
             }
-        } catch (XMLDBException e) {
-            throw new RuntimeException(e);
         }
     }
 }
