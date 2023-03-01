@@ -42,48 +42,90 @@ public class HelloController {
     }
 
     public void btnAltaClick(ActionEvent actionEvent) {
-        XPathQueryService service;
-        try {
-            service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
-            String query = "update insert <DEP_ROW> <DEPT_NO>" + txtNumDep.getText() + "</DEPT_NO> <DNOMBRE>" + txtNombre.getText() + "</DNOMBRE> <LOC>" + txtLocalidad.getText() + "</LOC></DEP_ROW> into /departamentos";
-            ResourceSet result = service.query(query);
-            if (result != null) {
-                Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Departamento Insertado", ButtonType.OK);
-                a.showAndWait();
+        if (txtNumDep.getText().isBlank() || txtLocalidad.getText().isBlank() || txtNombre.getText().isBlank()) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No pueden haber campos vacions", ButtonType.OK);
+            a.showAndWait();
+        } else {
+            XPathQueryService service;
+            try {
+                service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+                String query2 = "/departamentos/DEP_ROW[DEPT_NO=" + txtNumDep.getText() + "]";
+                ResourceSet result2 = service.query(query2);
+                if (result2.getSize() == 0) {
+                    String query = "update insert <DEP_ROW> <DEPT_NO>" + txtNumDep.getText() + "</DEPT_NO> <DNOMBRE>" + txtNombre.getText() + "</DNOMBRE> <LOC>" + txtLocalidad.getText() + "</LOC></DEP_ROW> into /departamentos";
+                    ResourceSet result = service.query(query);
+                    if (result != null) {
+                        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Departamento Insertado", ButtonType.OK);
+                        a.showAndWait();
+                    }
+                } else {
+                    Alert a = new Alert(Alert.AlertType.ERROR, "El departamento ya existe", ButtonType.OK);
+                    a.showAndWait();
+                }
+            } catch (XMLDBException e) {
+                throw new RuntimeException(e);
             }
-        } catch (XMLDBException e) {
-            throw new RuntimeException(e);
         }
     }
 
     public void btnBajaClick(ActionEvent actionEvent) {
-        XPathQueryService service;
-        try {
-            service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
-            String query = "update delete /departamentos/DEP_ROW[DEPT_NO = " + txtNumDep.getText() + "]";
-            ResourceSet result = service.query(query);
-            if (result != null) {
-                Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Departamento Insertado", ButtonType.OK);
-                a.showAndWait();
+        if (txtNumDep.getText().isBlank()) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "El campo numero de departamento no puede estar vacio", ButtonType.OK);
+            a.showAndWait();
+        } else {
+            XPathQueryService service;
+            try {
+                service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+                String query2 = "/departamentos/DEP_ROW[DEPT_NO=" + txtNumDep.getText() + "]";
+                ResourceSet result2 = service.query(query2);
+                if (result2.getSize() > 0) {
+                    String query = "update delete /departamentos/DEP_ROW[DEPT_NO = " + txtNumDep.getText() + "]";
+                    ResourceSet result = service.query(query);
+                    if (result != null) {
+                        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Departamento dado de baja", ButtonType.OK);
+                        a.showAndWait();
+                    } else {
+                        Alert a = new Alert(Alert.AlertType.ERROR, "Error al dar de baja", ButtonType.OK);
+                        a.showAndWait();
+                    }
+                } else {
+                    Alert a = new Alert(Alert.AlertType.ERROR, "El departamento no existe", ButtonType.OK);
+                    a.showAndWait();
+                }
+            } catch (XMLDBException e) {
+                throw new RuntimeException(e);
             }
-        } catch (XMLDBException e) {
-            throw new RuntimeException(e);
         }
     }
 
     public void btnModificacionClick(ActionEvent actionEvent) {
-        XPathQueryService service;
-        try {
-            service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
-            String query = "update replace /departamentos/DEP_ROW[DEPT_NO = " + txtNumDep.getText() + "] with "
-                    + "<DEP_ROW> <DEPT_NO>" + txtNumDep.getText() + "</DEPT_NO> <DNOMBRE>" + txtNombre.getText() + "</DNOMBRE> <LOC>" + txtLocalidad.getText() + "</LOC></DEP_ROW>";
-            ResourceSet result = service.query(query);
-            if (result != null) {
-                Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Departamento Insertado", ButtonType.OK);
-                a.showAndWait();
+        if (txtNumDep.getText().isBlank() || txtLocalidad.getText().isBlank() || txtNombre.getText().isBlank()) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No pueden haber campos vacions", ButtonType.OK);
+            a.showAndWait();
+        } else {
+            XPathQueryService service;
+            try {
+                service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+                String query2 = "/departamentos/DEP_ROW[DEPT_NO=" + txtNumDep.getText() + "]";
+                ResourceSet result2 = service.query(query2);
+                if (result2.getSize() > 0) {
+                    String query = "update replace /departamentos/DEP_ROW[DEPT_NO = " + txtNumDep.getText() + "] with "
+                            + "<DEP_ROW> <DEPT_NO>" + txtNumDep.getText() + "</DEPT_NO> <DNOMBRE>" + txtNombre.getText() + "</DNOMBRE> <LOC>" + txtLocalidad.getText() + "</LOC></DEP_ROW>";
+                    ResourceSet result = service.query(query);
+                    if (result != null) {
+                        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Departamento modificado", ButtonType.OK);
+                        a.showAndWait();
+                    } else {
+                        Alert a = new Alert(Alert.AlertType.ERROR, "Error al modificar", ButtonType.OK);
+                        a.showAndWait();
+                    }
+                } else {
+                    Alert a = new Alert(Alert.AlertType.ERROR, "El departamento no existe", ButtonType.OK);
+                    a.showAndWait();
+                }
+            } catch (XMLDBException e) {
+                throw new RuntimeException(e);
             }
-        } catch (XMLDBException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -111,6 +153,8 @@ public class HelloController {
             ResourceIterator k = resultEntero.getIterator();
             if (!i.hasMoreResources() && !j.hasMoreResources() && !k.hasMoreResources()) {
                 System.out.println("Consulta nulla");
+                Alert alerta = new Alert(Alert.AlertType.ERROR, "El departamento no existe", ButtonType.OK);
+                alerta.showAndWait();
             } else {
                 while (i.hasMoreResources() && j.hasMoreResources()) {
                     Resource r = i.nextResource();
